@@ -1,49 +1,20 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#15181e">
-  <title>Polymoduler — Low-poly 3D Studio</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#15181e">
+  <title>Polymoduler — Low-poly 3D Studio</title><link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand-mark">P</div>
-    <div class="brand"><strong>POLYMODULER</strong><span>LOW-POLY 3D STUDIO</span></div>
-    <div class="top-actions"><button id="undoBtn" title="Undo (Ctrl+Z)">↶ Undo</button><button id="redoBtn" title="Redo (Ctrl+Y)">↷ Redo</button><button id="saveBtn" class="accent">Save scene</button><button id="loadBtn">Open scene</button><input id="fileInput" type="file" accept=".json,application/json" hidden></div>
-  </header>
-  <main class="workspace">
-    <aside class="left-panel">
-      <div class="panel-heading"><span>SCENE</span><button id="addCubeBtn" class="plus" title="Add cube">+</button></div>
-      <div id="objectList" class="object-list"></div>
-      <div class="panel-note">Scene objects</div>
-      <div class="panel-heading tools-heading">TOOLS</div>
-      <button id="selectTool" class="tool active">⌖ <span>Select object</span></button>
-      <button id="wireBtn" class="tool">◇ <span>Toggle wireframe</span></button>
-      <button id="duplicateBtn" class="tool">▣ <span>Duplicate selected</span></button>
-      <button id="deleteBtn" class="tool danger">× <span>Delete selected</span></button>
-      <div class="left-help">Drag to orbit<br>Scroll to zoom<br>Click an object to select</div>
-    </aside>
-    <section class="viewport-area">
-      <div class="viewport-toolbar"><span><i class="status-dot"></i> VIEWPORT</span><span id="viewportMode">PERSPECTIVE · CPU</span><button id="resetViewBtn">Reset view</button></div>
-      <div class="canvas-wrap"><canvas id="viewport" aria-label="3D scene viewport"></canvas><div class="viewport-hint">POLYMODULER / SCENE VIEW</div><div id="emptyState" class="empty-state" hidden>No objects in scene<br><small>Use + to add a cube</small></div></div>
-      <footer class="viewport-footer"><span id="selectionStatus">Cube selected</span><span id="stats">Objects: 1 · Faces: 6</span><span>SOFTWARE VIEWPORT</span></footer>
-    </section>
-    <aside class="right-panel">
-      <div class="panel-heading">OBJECT PROPERTIES</div>
-      <div class="selected-name"><span class="cube-icon">⬡</span><input id="objectName" value="Cube" aria-label="Object name"></div>
-      <div class="section-label">TRANSFORM</div>
-      <div class="field-group"><label>Location</label><div class="axis-fields"><label><b>X</b><input id="posX" type="number" step="0.25" value="0"></label><label><b>Y</b><input id="posY" type="number" step="0.25" value="0"></label><label><b>Z</b><input id="posZ" type="number" step="0.25" value="0"></label></div></div>
-      <div class="field-group"><label>Rotation (degrees)</label><div class="axis-fields"><label><b>X</b><input id="rotX" type="number" step="5" value="0"></label><label><b>Y</b><input id="rotY" type="number" step="5" value="0"></label><label><b>Z</b><input id="rotZ" type="number" step="5" value="0"></label></div></div>
-      <div class="field-group"><label>Scale</label><div class="axis-fields"><label><b>X</b><input id="scaleX" type="number" min="0.05" step="0.1" value="1"></label><label><b>Y</b><input id="scaleY" type="number" min="0.05" step="0.1" value="1"></label><label><b>Z</b><input id="scaleZ" type="number" min="0.05" step="0.1" value="1"></label></div></div>
-      <button id="applyTransformBtn" class="apply-button">Apply transform</button>
-      <div class="section-label material-label">DISPLAY</div>
-      <div class="display-row"><span>Wireframe overlay</span><label class="switch"><input id="wireToggle" type="checkbox"><span></span></label></div>
-      <div class="display-row"><span>Ground grid</span><label class="switch"><input id="gridToggle" type="checkbox" checked><span></span></label></div>
-      <div class="tip-box"><strong>Early prototype</strong><p>This is the first independent web viewport. Editable vertex, edge and face tools are the next milestone.</p></div>
-    </aside>
-  </main>
-  <script src="app.js"></script>
-</body>
-</html>
+<header class="topbar"><div class="brand-mark">P</div><div class="brand"><strong>POLYMODULER</strong><span>INDEPENDENT LOW-POLY 3D STUDIO</span></div><div class="top-actions"><button id="undoBtn" title="Undo (Ctrl+Z)">↶ Undo</button><button id="redoBtn" title="Redo (Ctrl+Y)">↷ Redo</button><button id="saveBtn" class="accent">Save scene</button><button id="loadBtn">Open scene</button><input id="fileInput" type="file" accept=".json,application/json" hidden></div></header>
+<main class="workspace">
+<aside class="left-panel"><div class="panel-heading"><span>SCENE</span><button id="addCubeBtn" class="plus" title="Add cube">+</button></div><div id="objectList" class="object-list"></div><div class="panel-note">Scene objects</div><div class="panel-heading tools-heading">MODE</div>
+<div class="mode-tabs"><button id="modeObject" class="mode active">Object</button><button id="modeVertex" class="mode">Vertex</button><button id="modeEdge" class="mode">Edge</button><button id="modeFace" class="mode">Face</button></div>
+<div class="panel-heading tools-heading">MESH TOOLS</div><button id="extrudeBtn" class="tool">↥ <span>Extrude face</span></button><button id="deleteElementBtn" class="tool danger">× <span>Delete selection</span></button><button id="duplicateBtn" class="tool">▣ <span>Duplicate object</span></button><button id="deleteBtn" class="tool danger">⌫ <span>Delete object</span></button>
+<div class="left-help">Drag empty viewport to orbit<br>Scroll to zoom<br>Click geometry to select<br>Object mode: move the whole object</div></aside>
+<section class="viewport-area"><div class="viewport-toolbar"><span><i class="status-dot"></i> VIEWPORT</span><span id="viewportMode">PERSPECTIVE · CPU</span><button id="resetViewBtn">Reset view</button></div><div class="canvas-wrap"><canvas id="viewport" aria-label="3D scene viewport"></canvas><div class="viewport-hint">POLYMODULER / SOFTWARE VIEWPORT</div><div id="emptyState" class="empty-state" hidden>No objects in scene<br><small>Use + to add a cube</small></div></div><footer class="viewport-footer"><span id="selectionStatus">Cube selected</span><span id="stats">Objects: 1 · V: 8 · E: 12 · F: 6</span><span>CPU CANVAS</span></footer></section>
+<aside class="right-panel"><div class="panel-heading">PROPERTIES</div><div class="selected-name"><span class="cube-icon">⬡</span><input id="objectName" value="Cube" aria-label="Object name"></div><div class="section-label">TRANSFORM</div>
+<div class="field-group"><label>Location</label><div class="axis-fields"><label><b>X</b><input id="posX" type="number" step=".25" value="0"></label><label><b>Y</b><input id="posY" type="number" step=".25" value="0"></label><label><b>Z</b><input id="posZ" type="number" step=".25" value="0"></label></div></div>
+<div class="field-group"><label>Rotation (degrees)</label><div class="axis-fields"><label><b>X</b><input id="rotX" type="number" step="5" value="0"></label><label><b>Y</b><input id="rotY" type="number" step="5" value="0"></label><label><b>Z</b><input id="rotZ" type="number" step="5" value="0"></label></div></div>
+<div class="field-group"><label>Scale</label><div class="axis-fields"><label><b>X</b><input id="scaleX" type="number" min=".05" step=".1" value="1"></label><label><b>Y</b><input id="scaleY" type="number" min=".05" step=".1" value="1"></label><label><b>Z</b><input id="scaleZ" type="number" min=".05" step=".1" value="1"></label></div></div>
+<button id="applyTransformBtn" class="apply-button">Apply transform</button><div class="section-label">DISPLAY</div><div class="display-row"><span>Wireframe overlay</span><label class="switch"><input id="wireToggle" type="checkbox"><span></span></label></div><div class="display-row"><span>Ground grid</span><label class="switch"><input id="gridToggle" type="checkbox" checked><span></span></label></div><div class="tip-box"><strong>Mesh editing preview</strong><p>Vertex, edge and face selection use independent mesh data. Face extrusion creates new side faces and a new top face. More modelling operations are planned.</p></div></aside>
+</main><script src="app.js"></script></body></html>
