@@ -10,6 +10,7 @@ Polymoduler is an independent, browser-first low-poly 3D modelling project. Its 
 - Face extrusion with generated side faces
 - Face inset with a new inner face and connecting border faces
 - Move a selected vertex using numeric X/Y/Z coordinates or keyboard nudges
+- Move a selected edge by applying X/Y/Z offsets to both endpoints; the operation is undoable
 - Keyboard vertex nudging: Left/Right = X, Up/Down = Y, Page Up/Down = Z; hold Shift for 0.5-unit steps instead of 0.1
 - Delete selected faces and vertices with unused-vertex cleanup; safely dissolve an edge shared by exactly two faces, refusing unsupported boundary/non-manifold cases
 - Add, select, duplicate and delete objects
