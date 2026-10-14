@@ -5,7 +5,7 @@
   <title>Polymoduler — Low-poly 3D Studio</title><link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="topbar"><div class="brand-mark">P</div><div class="brand"><strong>POLYMODULER</strong><span>INDEPENDENT LOW-POLY 3D STUDIO</span></div><div class="top-actions"><button id="undoBtn" title="Undo (Ctrl+Z)">↶ Undo</button><button id="redoBtn" title="Redo (Ctrl+Y)">↷ Redo</button><button id="saveBtn" class="accent">Save scene</button><button id="loadBtn">Open scene</button><input id="fileInput" type="file" accept=".json,application/json" hidden></div></header>
+<header class="topbar"><div class="brand-mark">P</div><div class="brand"><strong>POLYMODULER</strong><span>INDEPENDENT LOW-POLY 3D STUDIO</span></div><div class="top-actions"><button id="undoBtn" title="Undo (Ctrl+Z)">↶ Undo</button><button id="redoBtn" title="Redo (Ctrl+Y)">↷ Redo</button><button id="saveBtn" class="accent">Save scene</button><button id="loadBtn">Open scene</button><span id="autosaveStatus" class="autosave-status" role="status" aria-live="polite">Autosave ready</span><input id="fileInput" type="file" accept=".json,application/json" hidden></div></header>
 <main class="workspace">
 <aside class="left-panel"><div class="panel-heading"><span>SCENE</span><button id="addCubeBtn" class="plus" title="Add cube">+</button></div><div id="objectList" class="object-list"></div><div class="panel-note">Scene objects</div><div class="panel-heading tools-heading">MODE</div>
 <div class="mode-tabs"><button id="modeObject" class="mode active">Object</button><button id="modeVertex" class="mode">Vertex</button><button id="modeEdge" class="mode">Edge</button><button id="modeFace" class="mode">Face</button></div>
