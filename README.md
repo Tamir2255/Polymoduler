@@ -12,6 +12,7 @@ Polymoduler is an independent, browser-first low-poly 3D modelling project. Its 
 - Move a selected vertex using numeric X/Y/Z coordinates or keyboard nudges
 - Move a selected edge by applying X/Y/Z offsets to both endpoints; the operation is undoable
 - Shift-click two separate boundary edges and bridge them with a connecting quad; unsupported edge pairs are rejected
+- Validate selected mesh structure, reporting degenerate/duplicate faces, invalid vertex references, boundary and non-manifold edges, and unused vertices
 - Keyboard vertex nudging: Left/Right = X, Up/Down = Y, Page Up/Down = Z; hold Shift for 0.5-unit steps instead of 0.1
 - Delete selected faces and vertices with unused-vertex cleanup; safely dissolve an edge shared by exactly two faces, refusing unsupported boundary/non-manifold cases
 - Add, select, duplicate and delete objects
@@ -29,8 +30,8 @@ Open `index.html` in a modern browser. No package installation or build step is 
 - A full interactive browser QA pass is still outstanding.
 
 ## Roadmap
-1. Validate topology operations and selection through interactive browser testing
-2. Add edge movement, bridge/loop tools and stronger mesh repair
+1. Finish interactive browser testing of topology operations and selection
+2. Add safe mesh repair and additional edge/loop tools
 3. Improve CPU viewport shading, clipping and picking
 4. Add autosave/project recovery and robust import/export
 5. Add materials, lights, animation, modifiers and AI-assisted workflows
