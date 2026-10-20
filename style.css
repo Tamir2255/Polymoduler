@@ -5,6 +5,8 @@
 
 .timeline{flex-shrink:0;background:#191c23;border-top:1px solid #303540;padding:8px 10px}.timeline-head,.timeline-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.timeline-head{margin-bottom:7px;color:#aeb8c8;font-size:10px;letter-spacing:.6px}.timeline-head strong{color:#c8c0ff;margin-right:auto;letter-spacing:1.2px}.timeline-head label{display:flex;align-items:center;gap:4px}.timeline-head input{width:58px}.timeline-head input,.timeline-head select{background:#12151a;border:1px solid #333945;border-radius:4px;color:#d9deea;padding:4px;font:11px 'Segoe UI',Arial}.timeline-controls button{padding:6px 8px;font-size:11px}.timeline-controls input[type=range]{flex:1;min-width:90px;accent-color:#8b78ff}.timeline-markers { position: relative; height: 14px; margin: 2px 4px 0; border-top: 1px solid #343b4a; }
 .keyframe-marker { position: absolute; top: -5px; transform: translateX(-50%); width: 9px; height: 9px; padding: 0; min-width: 0; border: 1px solid #15181e; border-radius: 2px; background: #a89cff; cursor: pointer; }
+.keyframe-marker.camera { background: #62d7e8; }
+.keyframe-marker.combined { background: linear-gradient(135deg, #a89cff 0 50%, #62d7e8 50% 100%); }
 .keyframe-marker:hover, .keyframe-marker.current { background: #fff09a; box-shadow: 0 0 0 2px #4c456a; }
 .keyframe-marker:focus-visible { outline: 2px solid #fff09a; outline-offset: 3px; }
 .keyframe-status{color:#818b9c;font-size:10px;margin-top:6px}.timeline button:disabled{opacity:.45}@media(max-width:560px){.timeline{max-height:160px;overflow:auto}.timeline-controls button{font-size:10px;padding:5px}.timeline-head strong{width:100%}}

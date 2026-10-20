@@ -22,7 +22,7 @@ Polymoduler is an independent, browser-first low-poly 3D modelling project. Its 
 - Undo/redo for scene and mesh operations
 - Save and load scene JSON, with basic mesh-structure validation
 - Export all scene objects to Wavefront OBJ, baking object transforms into vertex coordinates and keeping face indices valid across multiple objects
-- Transform animation timeline with per-object keyframes for location, rotation and scale, interpolated playback, frame scrubbing, adjustable frame rate and end frame; clickable timeline markers jump directly to keyed frames
+- Transform animation timeline with per-object keyframes for location, rotation and scale, plus camera keyframes for orbit, pitch, zoom distance and look-at target; interpolated playback, frame scrubbing, adjustable frame rate and end frame; clickable timeline markers show object/camera keys and jump directly to keyed frames
 - Dedicated workspace navigation for Modeling and Animation, plus clearly marked starter pages for Materials, Lighting, Rendering, and Scene; Animation expands the timeline into a dedicated bottom workspace
 - Record the software-rendered viewport to a downloadable WebM movie in browsers that support canvas capture and MediaRecorder; this is an early animation foundation, not a full video editor
 

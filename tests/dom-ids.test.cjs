@@ -21,8 +21,15 @@ test('the quad edge-loop control is present and wired to the implementation', ()
 });
 
 test('animation timeline controls are present and connected', () => {
-  for (const id of ['currentFrame', 'animationFps', 'animationEnd', 'timelineScrub', 'setKeyframeBtn', 'playAnimationBtn', 'stopAnimationBtn', 'prevKeyframeBtn', 'recordMovieBtn', 'keyframeStatus', 'timelineMarkers']) assert.ok(htmlIds.has(id), 'missing animation control: ' + id);
+  for (const id of ['currentFrame', 'animationFps', 'animationEnd', 'timelineScrub', 'setKeyframeBtn', 'setCameraKeyframeBtn', 'playAnimationBtn', 'stopAnimationBtn', 'prevKeyframeBtn', 'recordMovieBtn', 'keyframeStatus', 'timelineMarkers']) assert.ok(htmlIds.has(id), 'missing animation control: ' + id);
   assert.match(js, /function setKeyframe\(\)/);
+  assert.match(js, /function setCameraKeyframe\(\)/);
+  assert.match(js, /cameraKeyframes/);
+  assert.match(js, /function validCameraKeyframes\(keys,endFrame\)/);
+  assert.match(js, /target:before\.target\.map/);
+  assert.match(js, /angleDelta=\(\(after\.yaw-before\.yaw\+Math\.PI\*3\)%\(Math\.PI\*2\)\)-Math\.PI/);
+  assert.match(js, /setCameraKeyframeBtn'\)\.onclick=setCameraKeyframe/);
+  assert.match(js, /cameraKeyframes\|\|\[\]\)\.length/);
   assert.match(js, /function applyAnimationFrame\(frame/);
   assert.match(js, /function playAnimation\(\)/);
   assert.match(js, /function recordMovie\(\)/);
