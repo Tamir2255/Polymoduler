@@ -45,3 +45,12 @@ test('scene import rejects oversized files and excessive mesh sizes', () => {
   assert.match(js, /o\.vertices\.length>100000\|\|o\.faces\.length>100000/);
   assert.match(js, /f\.length>10000/);
 });
+
+
+test('workspace navigation exposes modeling, animation, and planned production sections', () => {
+  for (const name of ['modeling', 'animation', 'materials', 'lighting', 'rendering', 'scene']) assert.match(html, new RegExp('data-workspace=\"' + name + '\"'), 'missing workspace tab: ' + name);
+  assert.ok(html.includes('id=\"workspacePanel\"'));
+  assert.match(html, /function showWorkspace\(name\)/);
+  assert.match(html, /document\.body\.dataset\.workspace = name/);
+  assert.match(html, /name === 'modeling' \|\| name === 'animation'/);
+});

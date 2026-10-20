@@ -23,6 +23,7 @@ Polymoduler is an independent, browser-first low-poly 3D modelling project. Its 
 - Save and load scene JSON, with basic mesh-structure validation
 - Export all scene objects to Wavefront OBJ, baking object transforms into vertex coordinates and keeping face indices valid across multiple objects
 - Transform animation timeline with per-object keyframes for location, rotation and scale, interpolated playback, frame scrubbing, adjustable frame rate and end frame; clickable timeline markers jump directly to keyed frames
+- Dedicated workspace navigation for Modeling and Animation, plus clearly marked starter pages for Materials, Lighting, Rendering, and Scene; Animation expands the timeline into a dedicated bottom workspace
 - Record the software-rendered viewport to a downloadable WebM movie in browsers that support canvas capture and MediaRecorder; this is an early animation foundation, not a full video editor
 
 ## Run
@@ -30,7 +31,7 @@ Open `index.html` in a modern browser. No package installation or build step is 
 
 ## Development checks
 - `node --check app.js` — passed
-- `node --test tests/*.test.cjs` — 7 tests cover quad edge-loop traversal, DOM-ID integrity, OBJ export wiring, and scene-import size guards
+- `node --test tests/*.test.cjs` — 9 tests cover quad edge-loop traversal, DOM-ID integrity, workspace navigation, animation wiring, OBJ export wiring, and scene-import size guards
 - Scene import rejects files over 10 MB, scenes over 500 objects, meshes over 100,000 vertices/faces per object, and faces over 10,000 vertices
 - `git diff --check` — passed
 - Project owner reports that the interactive editor works as expected; automated checks are run before each milestone push.

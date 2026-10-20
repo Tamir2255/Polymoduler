@@ -5,7 +5,7 @@
   <title>Polymoduler — Low-poly 3D Studio</title><link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="topbar"><div class="brand-mark">P</div><div class="brand"><strong>POLYMODULER</strong><span>INDEPENDENT LOW-POLY 3D STUDIO</span></div><div class="top-actions"><button id="undoBtn" title="Undo (Ctrl+Z)">↶ Undo</button><button id="redoBtn" title="Redo (Ctrl+Y)">↷ Redo</button><button id="saveBtn" class="accent">Save scene</button><button id="exportObjBtn" title="Export geometry as Wavefront OBJ">Export OBJ</button><button id="loadBtn">Open scene</button><span id="autosaveStatus" class="autosave-status" role="status" aria-live="polite">Autosave ready</span><input id="fileInput" type="file" accept=".json,application/json" hidden></div></header>
+<header class="topbar"><div class="brand-mark">P</div><div class="brand"><strong>POLYMODULER</strong><span>INDEPENDENT LOW-POLY 3D STUDIO</span></div><nav class="workspace-nav" aria-label="Workspace sections"><button class="workspace-tab active" data-workspace="modeling">Modeling</button><button class="workspace-tab" data-workspace="animation">Animation</button><button class="workspace-tab" data-workspace="materials">Materials</button><button class="workspace-tab" data-workspace="lighting">Lighting</button><button class="workspace-tab" data-workspace="rendering">Rendering</button><button class="workspace-tab" data-workspace="scene">Scene</button></nav><div class="top-actions"><button id="undoBtn" title="Undo (Ctrl+Z)">↶ Undo</button><button id="redoBtn" title="Redo (Ctrl+Y)">↷ Redo</button><button id="saveBtn" class="accent">Save scene</button><button id="exportObjBtn" title="Export geometry as Wavefront OBJ">Export OBJ</button><button id="loadBtn">Open scene</button><span id="autosaveStatus" class="autosave-status" role="status" aria-live="polite">Autosave ready</span><input id="fileInput" type="file" accept=".json,application/json" hidden></div></header>
 <main class="workspace">
 <aside class="left-panel"><div class="panel-heading"><span>SCENE</span><button id="addCubeBtn" class="plus" title="Add cube">+</button></div><div class="primitive-row"><select id="primitiveType" aria-label="Primitive type"><option value="cube">Cube</option><option value="plane">Plane</option><option value="uvsphere">UV Sphere</option><option value="cylinder">Cylinder</option><option value="cone">Cone</option></select><button id="addPrimitiveBtn" class="tool">Add primitive</button></div><div id="objectList" class="object-list"></div><div class="panel-note">Scene objects</div><div class="panel-heading tools-heading">MODE</div>
 <div class="mode-tabs"><button id="modeObject" class="mode active">Object</button><button id="modeVertex" class="mode">Vertex</button><button id="modeEdge" class="mode">Edge</button><button id="modeFace" class="mode">Face</button></div>
@@ -17,4 +17,29 @@
 <div class="field-group"><label>Rotation (degrees)</label><div class="axis-fields"><label><b>X</b><input id="rotX" type="number" step="5" value="0"></label><label><b>Y</b><input id="rotY" type="number" step="5" value="0"></label><label><b>Z</b><input id="rotZ" type="number" step="5" value="0"></label></div></div>
 <div class="field-group"><label>Scale</label><div class="axis-fields"><label><b>X</b><input id="scaleX" type="number" min=".05" step=".1" value="1"></label><label><b>Y</b><input id="scaleY" type="number" min=".05" step=".1" value="1"></label><label><b>Z</b><input id="scaleZ" type="number" min=".05" step=".1" value="1"></label></div></div>
 <button id="applyTransformBtn" class="apply-button">Apply transform</button><div class="section-label">DISPLAY</div><div class="display-row"><span>Wireframe overlay</span><label class="switch"><input id="wireToggle" type="checkbox"><span></span></label></div><div class="display-row"><span>Ground grid</span><label class="switch"><input id="gridToggle" type="checkbox" checked><span></span></label></div><div class="tip-box"><strong>Mesh editing preview</strong><p>Select a vertex and enter X/Y/Z to move it. Inset and extrusion create new mesh faces. This is an early CPU-rendered modelling prototype.</p></div></aside>
-</main><script src="app.js"></script></body></html>
+</main><section id="workspacePanel" class="workspace-panel" hidden aria-live="polite"></section><script src="app.js"></script><script>
+(() => {
+ const labels = {
+  materials: {title:'Materials',tag:'SURFACE WORKSPACE',description:'Material authoring will live here.',items:[['Base color','Choose the surface color for selected objects.'],['Surface style','Low-poly flat colors, palette presets, and material slots.'],['Transparency','Opacity and alpha controls.']]},
+  lighting: {title:'Lighting',tag:'LIGHTING WORKSPACE',description:'Build the look of your scene with lights and environment controls.',items:[['Light sources','Add and position sun, point, and area lights.'],['World environment','Background color and ambient illumination.'],['Shadows','Shadow quality and CPU-friendly options.']]},
+  rendering: {title:'Rendering',tag:'OUTPUT WORKSPACE',description:'Prepare a still image or animation export.',items:[['Output size','Resolution and aspect ratio.'],['Render quality','CPU render presets designed for integrated graphics.'],['Export','Image sequence and video output settings.']]},
+  scene: {title:'Scene',tag:'PROJECT WORKSPACE',description:'Manage the whole project and its output settings.',items:[['Scene objects','Organize, rename, and group objects.'],['Units & origin','Scene units, origin, and world settings.'],['Project files','Save, restore, and inspect project data.']]}
+ };
+ const panel = document.getElementById('workspacePanel');
+ function showWorkspace(name) {
+  document.body.dataset.workspace = name;
+  document.querySelectorAll('.workspace-tab').forEach(button => {
+   const active = button.dataset.workspace === name;
+   button.classList.toggle('active', active);
+   button.setAttribute('aria-pressed', String(active));
+  });
+  if (name === 'modeling' || name === 'animation') { panel.hidden = true; return; }
+  const data = labels[name];
+  if (!data) return;
+  panel.innerHTML = '<div class="section-kicker">'+data.tag+'</div><h1>'+data.title+'</h1><p class="workspace-intro">'+data.description+'</p><div class="workspace-cards">'+data.items.map((item,i) => '<article class="workspace-card"><span class="workspace-card-number">0'+(i+1)+'</span><h2>'+item[0]+'</h2><p>'+item[1]+'</p><span class="planned-label">WORKSPACE PLANNED</span></article>').join('')+'</div><p class="workspace-note">This section is a visible starting point; its editing tools will be implemented in upcoming milestones.</p>';
+  panel.hidden = false;
+ }
+ document.querySelectorAll('.workspace-tab').forEach(button => button.addEventListener('click', () => showWorkspace(button.dataset.workspace)));
+ showWorkspace('modeling');
+})();
+</script></body></html>
