@@ -54,6 +54,18 @@ test('scene import rejects oversized files and excessive mesh sizes', () => {
 });
 
 
+test('material controls are present and connected to per-object CPU shading and scene persistence', () => {
+  for (const id of ['materialColor', 'materialRoughness', 'materialRoughnessValue']) assert.ok(htmlIds.has(id), 'missing material control: ' + id);
+  assert.match(js, /function validColor\(value\)/);
+  assert.match(js, /function validRoughness\(value\)/);
+  assert.match(js, /shadeColor\(wp\[f\[0\]\],wp\[f\[1\]\],wp\[f\[2\]\],o\.baseColor\|\|colors/);
+  assert.match(js, /baseColor:validColor\(o\.baseColor\)\?o\.baseColor:'#8d98b4'/);
+  assert.match(js, /roughness:validRoughness\(o\.roughness\)/);
+  assert.match(js, /\$\('materialColor'\)\.addEventListener\('input'/);
+  assert.match(js, /\$\('materialRoughness'\)\.addEventListener\('input'/);
+  assert.match(html, /name==='materials'\?'MATERIAL CONTROLS AVAILABLE'/);
+});
+
 test('workspace navigation exposes modeling, animation, and planned production sections', () => {
   for (const name of ['modeling', 'animation', 'materials', 'lighting', 'rendering', 'scene']) assert.match(html, new RegExp('data-workspace=\"' + name + '\"'), 'missing workspace tab: ' + name);
   assert.ok(html.includes('id=\"workspacePanel\"'));

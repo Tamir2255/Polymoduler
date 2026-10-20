@@ -19,6 +19,7 @@ Polymoduler is an independent, browser-first low-poly 3D modelling project. Its 
 - Delete selected faces and vertices with unused-vertex cleanup; safely dissolve an edge shared by exactly two faces, refusing unsupported boundary/non-manifold cases
 - Add, select, duplicate and delete objects
 - Basic object transforms and wireframe overlay
+- Per-object base color and roughness controls with CPU flat-face shading; material properties are preserved in scene JSON and autosave recovery
 - Undo/redo for scene and mesh operations
 - Save and load scene JSON, with basic mesh-structure validation
 - Export all scene objects to Wavefront OBJ, baking object transforms into vertex coordinates and keeping face indices valid across multiple objects
