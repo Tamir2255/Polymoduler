@@ -20,6 +20,16 @@ test('the quad edge-loop control is present and wired to the implementation', ()
   assert.match(js, /function selectEdgeLoop\(\)/);
 });
 
+test('animation timeline controls are present and connected', () => {
+  for (const id of ['currentFrame', 'animationFps', 'animationEnd', 'timelineScrub', 'setKeyframeBtn', 'playAnimationBtn', 'stopAnimationBtn', 'prevKeyframeBtn', 'recordMovieBtn', 'keyframeStatus']) assert.ok(htmlIds.has(id), 'missing animation control: ' + id);
+  assert.match(js, /function setKeyframe\(\)/);
+  assert.match(js, /function applyAnimationFrame\(frame/);
+  assert.match(js, /function playAnimation\(\)/);
+  assert.match(js, /function recordMovie\(\)/);
+  assert.match(js, /\$\('recordMovieBtn'\)\.onclick=recordMovie/);
+  assert.match(js, /animation,currentFrame/);
+});
+
 test('Wavefront OBJ export button is connected to transformed scene geometry', () => {
   assert.ok(htmlIds.has('exportObjBtn'));
   assert.match(js, /\$\('exportObjBtn'\)\.onclick=exportOBJ/);
