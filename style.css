@@ -8,3 +8,10 @@
 .keyframe-marker:hover, .keyframe-marker.current { background: #fff09a; box-shadow: 0 0 0 2px #4c456a; }
 .keyframe-marker:focus-visible { outline: 2px solid #fff09a; outline-offset: 3px; }
 .keyframe-status{color:#818b9c;font-size:10px;margin-top:6px}.timeline button:disabled{opacity:.45}@media(max-width:560px){.timeline{max-height:160px;overflow:auto}.timeline-controls button{font-size:10px;padding:5px}.timeline-head strong{width:100%}}
+
+/* Keep the animation timeline visible inside the editor viewport. */
+.viewport-area{min-height:0;overflow:hidden}
+.canvas-wrap{min-height:0;flex:1 1 auto}
+.timeline{position:relative;z-index:2;display:block;flex:0 0 auto;min-height:86px;visibility:visible;opacity:1}
+.timeline-head,.timeline-controls,.timeline-markers,.keyframe-status{visibility:visible}
+@media(max-height:520px){.timeline{max-height:42vh;overflow:auto}}
