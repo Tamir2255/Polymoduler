@@ -41,8 +41,8 @@
    const color = panel.querySelector('#materialWorkspaceColor'), roughness = panel.querySelector('#materialWorkspaceRoughness');
    color.value = document.getElementById('materialColor').value; panel.querySelector('#materialWorkspaceSwatch').textContent = color.value.toUpperCase();
    roughness.value = document.getElementById('materialRoughness').value; panel.querySelector('#materialWorkspaceRoughnessValue').textContent = Number(roughness.value).toFixed(2);
-   color.addEventListener('input', () => { const side = document.getElementById('materialColor'); side.value = color.value; side.dispatchEvent(new Event('input', {bubbles:true})); panel.querySelector('#materialWorkspaceSwatch').textContent = color.value.toUpperCase(); });
-   roughness.addEventListener('input', () => { const side = document.getElementById('materialRoughness'); side.value = roughness.value; side.dispatchEvent(new Event('input', {bubbles:true})); panel.querySelector('#materialWorkspaceRoughnessValue').textContent = Number(roughness.value).toFixed(2); });
+   color.addEventListener('input', () => { panel.querySelector('#materialWorkspaceSwatch').textContent = color.value.toUpperCase(); });
+   roughness.addEventListener('input', () => { panel.querySelector('#materialWorkspaceRoughnessValue').textContent = Number(roughness.value).toFixed(2); });
    panel.querySelectorAll('[data-material-color]').forEach(button => button.addEventListener('click', () => { color.value = button.dataset.materialColor; color.dispatchEvent(new Event('input', {bubbles:true})); }));
    panel.hidden = false; return;
   }
