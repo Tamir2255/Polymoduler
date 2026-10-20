@@ -19,3 +19,10 @@ test('the quad edge-loop control is present and wired to the implementation', ()
   assert.match(js, /\$\('selectEdgeLoopBtn'\)\.onclick=selectEdgeLoop/);
   assert.match(js, /function selectEdgeLoop\(\)/);
 });
+
+test('scene import rejects oversized files and excessive mesh sizes', () => {
+  assert.match(js, /file\.size>10\*1024\*1024/);
+  assert.match(js, /data\.scene\.objects\.length>500/);
+  assert.match(js, /o\.vertices\.length>100000\|\|o\.faces\.length>100000/);
+  assert.match(js, /f\.length>10000/);
+});

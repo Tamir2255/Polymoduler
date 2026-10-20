@@ -27,8 +27,8 @@ Open `index.html` in a modern browser. No package installation or build step is 
 
 ## Development checks
 - `node --check app.js` — passed
-- `node --test tests/*.test.cjs` — 5 tests passed (quad edge-loop traversal and DOM-ID wiring)
-- Static DOM-ID integrity is included in the automated test suite
+- `node --test tests/*.test.cjs` — 6 tests cover quad edge-loop traversal, DOM-ID integrity, and scene-import size guards
+- Scene import rejects files over 10 MB, scenes over 500 objects, meshes over 100,000 vertices/faces per object, and faces over 10,000 vertices
 - `git diff --check` — passed
 - A full interactive browser QA pass is still outstanding.
 
