@@ -66,9 +66,10 @@ test('material controls are present and connected to per-object CPU shading and 
   assert.match(html, /id=\\?"materialWorkspaceColor\\?"/);
   assert.match(html, /id=\\?"materialWorkspaceRoughness\\?"/);
   assert.match(html, /data-material-color/);
-  assert.match(js, /document\.addEventListener\('input',e=>\{const target=e\.target,o=selected\(\)/);
-  assert.match(js, /target\.id==='materialWorkspaceColor'/);
-  assert.match(js, /target\.id==='materialWorkspaceRoughness'/);
+  assert.match(js, /window\.polymodulerSetMaterialColor=setMaterialColor/);
+  assert.match(js, /window\.polymodulerSetMaterialRoughness=setMaterialRoughness/);
+  assert.match(html, /window\.polymodulerSetMaterialColor\(color\.value\)/);
+  assert.match(html, /window\.polymodulerSetMaterialRoughness\(roughness\.value\)/);
   assert.match(js, /workspaceColor=document\.getElementById\('materialWorkspaceColor'\)/);
 });
 

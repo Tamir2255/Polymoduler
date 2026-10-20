@@ -41,9 +41,9 @@
    const color = panel.querySelector('#materialWorkspaceColor'), roughness = panel.querySelector('#materialWorkspaceRoughness');
    color.value = document.getElementById('materialColor').value; panel.querySelector('#materialWorkspaceSwatch').textContent = color.value.toUpperCase();
    roughness.value = document.getElementById('materialRoughness').value; panel.querySelector('#materialWorkspaceRoughnessValue').textContent = Number(roughness.value).toFixed(2);
-   color.addEventListener('input', () => { panel.querySelector('#materialWorkspaceSwatch').textContent = color.value.toUpperCase(); });
-   roughness.addEventListener('input', () => { panel.querySelector('#materialWorkspaceRoughnessValue').textContent = Number(roughness.value).toFixed(2); });
-   panel.querySelectorAll('[data-material-color]').forEach(button => button.addEventListener('click', () => { color.value = button.dataset.materialColor; color.dispatchEvent(new Event('input', {bubbles:true})); }));
+   color.addEventListener('input', () => { if (typeof window.polymodulerSetMaterialColor === 'function') window.polymodulerSetMaterialColor(color.value); });
+   roughness.addEventListener('input', () => { if (typeof window.polymodulerSetMaterialRoughness === 'function') window.polymodulerSetMaterialRoughness(roughness.value); });
+   panel.querySelectorAll('[data-material-color]').forEach(button => button.addEventListener('click', () => { color.value = button.dataset.materialColor; if (typeof window.polymodulerSetMaterialColor === 'function') window.polymodulerSetMaterialColor(color.value); }));
    panel.hidden = false; return;
   }
   panel.innerHTML = '<div class="section-kicker">'+data.tag+'</div><h1>'+data.title+'</h1><p class="workspace-intro">'+data.description+'</p><div class="workspace-cards">'+data.items.map((item,i) => '<article class="workspace-card"><span class="workspace-card-number">0'+(i+1)+'</span><h2>'+item[0]+'</h2><p>'+item[1]+'</p><span class="planned-label">WORKSPACE PLANNED</span></article>').join('')+'</div><p class="workspace-note">This section is a visible starting point; its editing tools will be implemented in upcoming milestones.</p>';
