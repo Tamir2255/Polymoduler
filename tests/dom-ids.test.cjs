@@ -63,7 +63,11 @@ test('material controls are present and connected to per-object CPU shading and 
   assert.match(js, /roughness:validRoughness\(o\.roughness\)/);
   assert.match(js, /\$\('materialColor'\)\.addEventListener\('input'/);
   assert.match(js, /\$\('materialRoughness'\)\.addEventListener\('input'/);
-  assert.match(html, /name==='materials'\?'MATERIAL CONTROLS AVAILABLE'/);
+  assert.match(html, /id=\\?"materialWorkspaceColor\\?"/);
+  assert.match(html, /id=\\?"materialWorkspaceRoughness\\?"/);
+  assert.match(html, /data-material-color/);
+  assert.match(html, /side\.dispatchEvent\(new Event\('input'/);
+  assert.match(js, /workspaceColor=document\.getElementById\('materialWorkspaceColor'\)/);
 });
 
 test('workspace navigation exposes modeling, animation, and planned production sections', () => {
