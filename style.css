@@ -15,3 +15,10 @@
 .timeline{position:relative;z-index:2;display:block;flex:0 0 auto;min-height:86px;visibility:visible;opacity:1}
 .timeline-head,.timeline-controls,.timeline-markers,.keyframe-status{visibility:visible}
 @media(max-height:520px){.timeline{max-height:42vh;overflow:auto}}
+
+/* Timeline is anchored to the viewport so flex sizing can never push it out of view. */
+.viewport-area{position:relative;min-height:0;overflow:hidden}
+.viewport-area>.timeline{position:absolute;left:0;right:0;bottom:30px;z-index:5;display:block;flex:none;min-height:112px;max-height:34vh;overflow:auto;background:#191c23;border-top:2px solid #8b78ff;box-shadow:0 -8px 24px rgba(0,0,0,.35);padding:10px 12px}
+.viewport-area>.timeline .timeline-head strong{font-size:11px;color:#d8d0ff}
+.viewport-area>.timeline .timeline-controls{min-height:30px}
+@media(max-width:560px){.viewport-area>.timeline{bottom:30px;min-height:128px;max-height:40vh}}
