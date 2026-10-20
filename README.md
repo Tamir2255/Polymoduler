@@ -21,19 +21,20 @@ Polymoduler is an independent, browser-first low-poly 3D modelling project. Its 
 - Basic object transforms and wireframe overlay
 - Undo/redo for scene and mesh operations
 - Save and load scene JSON, with basic mesh-structure validation
+- Export all scene objects to Wavefront OBJ, baking object transforms into vertex coordinates and keeping face indices valid across multiple objects
 
 ## Run
 Open `index.html` in a modern browser. No package installation or build step is required.
 
 ## Development checks
 - `node --check app.js` — passed
-- `node --test tests/*.test.cjs` — 6 tests cover quad edge-loop traversal, DOM-ID integrity, and scene-import size guards
+- `node --test tests/*.test.cjs` — 7 tests cover quad edge-loop traversal, DOM-ID integrity, OBJ export wiring, and scene-import size guards
 - Scene import rejects files over 10 MB, scenes over 500 objects, meshes over 100,000 vertices/faces per object, and faces over 10,000 vertices
 - `git diff --check` — passed
-- A full interactive browser QA pass is still outstanding.
+- Project owner reports that the interactive editor works as expected; automated checks are run before each milestone push.
 
 ## Roadmap
-1. Finish interactive browser testing of topology operations and selection
+1. Expand regression tests for topology operations and selection
 2. Add safe mesh repair and additional edge/loop tools
 3. Improve CPU viewport shading, clipping and picking
 4. Add autosave/project recovery and robust import/export

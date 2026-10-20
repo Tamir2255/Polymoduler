@@ -20,6 +20,13 @@ test('the quad edge-loop control is present and wired to the implementation', ()
   assert.match(js, /function selectEdgeLoop\(\)/);
 });
 
+test('Wavefront OBJ export button is connected to transformed scene geometry', () => {
+  assert.ok(htmlIds.has('exportObjBtn'));
+  assert.match(js, /\$\('exportObjBtn'\)\.onclick=exportOBJ/);
+  assert.match(js, /function exportOBJ\(\)/);
+  assert.match(js, /out\.push\('v '\+p\.map/);
+  assert.match(js, /out\.push\('f '\+f\.map/);
+});
 test('scene import rejects oversized files and excessive mesh sizes', () => {
   assert.match(js, /file\.size>10\*1024\*1024/);
   assert.match(js, /data\.scene\.objects\.length>500/);
