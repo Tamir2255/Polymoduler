@@ -65,3 +65,22 @@ body[data-workspace="animation"] .keyframe-status{font-size:11px;margin-top:8px}
 
 /* Keep the live viewport visible beside the Materials workspace for immediate visual feedback. */
 body[data-workspace="materials"] .workspace-panel{left:auto;right:0;top:60px;bottom:0;width:min(420px,42vw);padding:24px;z-index:8;border-left:1px solid #38354d;background:linear-gradient(145deg,rgba(32,35,44,.98),rgba(20,23,29,.98));backdrop-filter:blur(10px)}body[data-workspace="materials"] .workspace-panel h1{font-size:30px}body[data-workspace="materials"] .workspace-intro{font-size:12px;margin-bottom:18px}body[data-workspace="materials"] .material-workspace-controls{padding:18px}body[data-workspace="materials"] .material-workspace-color input[type=color]{height:72px}body[data-workspace="materials"] .material-workspace-roughness{margin-top:20px}body[data-workspace="materials"] .material-preset-row{gap:8px;margin-top:18px;padding-top:14px}body[data-workspace="materials"] .material-preset-row button{width:27px;height:27px}body[data-workspace="materials"] .material-workspace-controls .workspace-note{margin-top:18px}@media(max-width:760px){body[data-workspace="materials"] .workspace-panel{top:104px;width:min(360px,92vw);max-width:100%;bottom:30px;padding:16px}}
+
+/* Lighting workspace: preserve a live CPU viewport beside the editable controls. */
+body[data-workspace="lighting"] .workspace{grid-template-columns:minmax(0,1fr);margin-right:min(420px,42vw)}
+body[data-workspace="lighting"] .left-panel,body[data-workspace="lighting"] .right-panel{display:none}
+body[data-workspace="lighting"] .workspace-panel{top:60px;left:auto;right:0;bottom:0;width:min(420px,42vw);z-index:8;padding:22px;overflow-y:auto;border-left:1px solid #39384a;background:linear-gradient(155deg,#23242f,#16191f)}
+body[data-workspace="lighting"] .workspace-panel h1{font-size:30px}
+body[data-workspace="lighting"] .workspace-intro{font-size:12px;margin-bottom:18px}
+.lighting-workspace-controls{display:grid;gap:14px;max-width:560px}
+.lighting-card{background:#20232c;border:1px solid #383d4b;border-radius:10px;padding:18px}
+.lighting-card h2{font-size:16px;font-weight:600;margin:0 0 7px;color:#e3e2fa}
+.lighting-card p{font-size:11px;color:#9da7b8;line-height:1.6;margin:0 0 18px}
+.lighting-slider{display:grid;gap:7px;margin:15px 0;color:#c4cad9;font-size:12px}
+.lighting-slider span{display:flex;justify-content:space-between;gap:12px}
+.lighting-slider b{color:#b2a6ff;font-variant-numeric:tabular-nums}
+.lighting-slider input[type=range]{width:100%;accent-color:#9a88ff;cursor:pointer}
+.world-color-control{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#c4cad9;font-size:12px;margin-top:18px}
+.world-color-control input{width:64px;height:42px;background:#16191f;border:1px solid #444955;border-radius:7px;padding:3px;cursor:pointer}
+.lighting-reset{margin-top:18px;width:100%;border-color:#504b6f;background:#302c42}
+@media(max-width:760px){body[data-workspace="lighting"] .workspace{margin-right:0}body[data-workspace="lighting"] .workspace-panel{top:104px;width:min(360px,92vw);max-width:100%;bottom:30px;padding:15px}body[data-workspace="lighting"] .lighting-card{padding:14px}}
