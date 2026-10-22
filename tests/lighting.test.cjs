@@ -6,6 +6,7 @@ const vm = require('node:vm');
 
 const root = path.join(__dirname, '..');
 const app = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
+const modifiers = fs.readFileSync(path.join(root, 'mesh-modifiers.js'), 'utf8');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'style.css'), 'utf8');
 
@@ -52,6 +53,7 @@ function launch(saved = null) {
   },FileReader:class {
     readAsText(file){this.result=file.text;this.onload();}
   }};
+  vm.runInNewContext(modifiers,context,{filename:'mesh-modifiers.js'});
   vm.runInNewContext(app,context,{filename:'app.js'});
   return {window,fills,storage,records,load:(data)=>{
     element('fileInput').files=[{size:1000,text:JSON.stringify(data)}];

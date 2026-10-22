@@ -7,9 +7,11 @@ const root=path.join(__dirname,'..');
 const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const studio=fs.readFileSync(path.join(root,'studio-workspaces.js'),'utf8');
+const modifiers=fs.readFileSync(path.join(root,'mesh-modifiers.js'),'utf8');
+const modifierWorkspace=fs.readFileSync(path.join(root,'modifier-workspace.js'),'utf8');
 const initialScript=html.slice(html.indexOf('<script>')+8,html.indexOf('</script>',html.indexOf('<script>')));
 function harness(saved=null){
-  const nodes=new Map(),tabs=[],downloads=[],captures=[],fills=[],events=new Map(),storage=new Map(saved?[['polymoduler.autosave.v1',JSON.stringify(saved)]]:[]);
+  const nodes=new Map(),tabs=[],downloads=[],captures=[],fills=[],alerts=[],events=new Map(),storage=new Map(saved?[['polymoduler.autosave.v1',JSON.stringify(saved)]]:[]);
   let savedBlob=null;
   const noop=()=>{};
   function node(id){
@@ -40,8 +42,8 @@ function harness(saved=null){
     },set(target,key,val){target[key]=val;return true;}
   });
   canvas.getContext=()=>ctx;
-  canvas.toBlob=(cb,type)=>{captures.push({width:canvas.width,height:canvas.height,type});cb(new Blob(['fake-png'],{type:'image/png'}));};
-  for(const name of ['modeling','animation','materials','lighting','rendering','scene']){
+  canvas.toBlob=(cb,type)=>{captures.push({width:canvas.width,height:canvas.height,type,fillCount:fills.length});cb(new Blob(['fake-png'],{type:'image/png'}));};
+  for(const name of ['modeling','modifiers','animation','materials','lighting','rendering','scene']){
     const tab=node('tab-'+name);tab.dataset.workspace=name;tabs.push(tab);
   }
   const document={
@@ -57,21 +59,24 @@ function harness(saved=null){
     addEventListener:noop
   };
   const window={devicePixelRatio:1,addEventListener:(type,fn)=>events.set(type,fn)};
-  const context={document,window,Blob,alert:noop,
+  const context={document,window,Blob,alert:message=>alerts.push(String(message)),
     URL:{createObjectURL:blob=>{savedBlob=blob;return 'blob:fake';},revokeObjectURL:noop},
     localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},
     setTimeout:()=>1,clearTimeout:noop,
     FileReader:class{readAsText(file){this.result=file.text;this.onload();}}
   };
+  vm.runInNewContext(modifiers,context,{filename:'mesh-modifiers.js'});
   vm.runInNewContext(app,context,{filename:'app.js'});
   vm.runInNewContext(studio,context,{filename:'studio-workspaces.js'});
+  vm.runInNewContext(modifierWorkspace,context,{filename:'modifier-workspace.js'});
   vm.runInNewContext(initialScript,context,{filename:'inline-workspace.js'});
   return {
-    window,document,nodes,canvas,fills,captures,downloads,storage,events,ctx,
+    window,document,nodes,canvas,fills,captures,downloads,alerts,storage,events,ctx,
     api:window.polymodulerStudio,
     node,
     tab:name=>tabs.find(t=>t.dataset.workspace===name),
     async savedJSON(){node('saveBtn').click();return JSON.parse(await savedBlob.text());},
+    async latestBlobText(){return savedBlob?await savedBlob.text():'';},
     importJSON(data){const file={size:500,text:JSON.stringify(data)};node('fileInput').onchange({target:{files:[file],value:''}});}
   };
 }
@@ -234,4 +239,165 @@ test('Importing an OBJ while Scene workspace is open refreshes the visible objec
   ui.node('objFileInput').onchange({target:{files:[{size:data.length,text:data}],value:''}});
   assert.equal(ui.node('objectCount').textContent,'2 total');
   assert.equal(ui.api.getScene().objects[1].name,'NewMesh');
+});
+
+test('Modifiers workspace is navigable and Add builds a real evaluated stack',()=>{
+  const ui=harness();
+  ui.tab('modifiers').click();
+  assert.equal(ui.document.body.dataset.workspace,'modifiers');
+  assert.match(ui.node('workspacePanel').innerHTML,/Modifier stack/);
+  const type=ui.node('modifierType');type.value='array';
+  ui.node('modifierAdd').click();
+  const info=ui.api.getModifiers();
+  assert.equal(info.modifiers.length,1);
+  assert.equal(info.modifiers[0].type,'array');
+  assert.equal(info.base.faces,6);
+  assert.equal(info.evaluated.faces,18);
+  assert.match(ui.node('modifierMeshCounts').textContent,/Preview: 24 vertices \/ 18 faces/);
+});
+test('Modifier values, reordering, visibility and Undo/Redo update evaluated mesh',()=>{
+  const ui=harness();
+  ui.api.addModifier('array');
+  ui.api.updateModifier(0,{count:4,offset:[4,0,0]});
+  assert.equal(ui.api.getEvaluatedMesh(1).vertices.length,32);
+  ui.api.addModifier('mirror');
+  assert.equal(ui.api.getEvaluatedMesh(1).vertices.length,64);
+  ui.api.updateModifier(1,{enabled:false});
+  assert.equal(ui.api.getEvaluatedMesh(1).vertices.length,32);
+  ui.api.moveModifier(1,-1);
+  assert.equal(ui.api.getModifiers().modifiers[0].type,'mirror');
+  ui.node('undoBtn').click();
+  assert.equal(ui.api.getModifiers().modifiers[0].type,'array');
+  ui.node('redoBtn').click();
+  assert.equal(ui.api.getModifiers().modifiers[0].type,'mirror');
+});
+test('Over-budget modifier updates are rejected without modifying the stack',()=>{
+  const ui=harness();
+  ui.api.addModifier('array');
+  ui.api.updateModifier(0,{count:8});
+  ui.api.addModifier('array');
+  ui.api.updateModifier(1,{count:8});
+  ui.api.addModifier('array');
+  ui.api.updateModifier(2,{count:8});
+  const before=JSON.stringify(ui.api.getScene());
+  assert.throws(()=>ui.api.addModifier('subdivide'),/12,000/);
+  assert.equal(JSON.stringify(ui.api.getScene()),before);
+  assert.equal(ui.api.getModifiers().modifiers.length,3);
+});
+test('Applying modifiers bakes geometry, leaves it editable and supports undo',()=>{
+  const ui=harness();
+  ui.api.addModifier('array');
+  const preview=ui.api.getEvaluatedMesh(1);
+  assert.equal(preview.vertices.length,24);
+  const applied=ui.api.applyModifiers();
+  assert.equal(applied.modifiers.length,0);
+  assert.equal(ui.api.getScene().objects[0].vertices.length,24);
+  assert.equal(ui.api.getScene().objects[0].faces.length,18);
+  ui.node('undoBtn').click();
+  assert.equal(ui.api.getScene().objects[0].vertices.length,8);
+  assert.equal(ui.api.getModifiers().modifiers[0].type,'array');
+});
+test('Object mode previews modifiers while edit mode keeps original selectable topology',()=>{
+  const ui=harness();
+  ui.api.addModifier('array');
+  assert.match(ui.node('stats').textContent,/F: 18/);
+  ui.node('modeFace').click();
+  assert.match(ui.node('stats').textContent,/F: 6/);
+  ui.node('modeObject').click();
+  assert.match(ui.node('stats').textContent,/F: 18/);
+});
+test('Modifier geometry is included in OBJ export and persists through JSON and autosave',async()=>{
+  const ui=harness();
+  ui.api.addModifier('array');
+  ui.api.updateModifier(0,{count:4,offset:[3,0,0]});
+  ui.api.addModifier('subdivide');
+  const expected=ui.api.getEvaluatedMesh(1);
+  ui.node('exportObjBtn').click();
+  const obj=await ui.latestBlobText();
+  assert.equal(obj.split('\n').filter(line=>line.startsWith('v ')).length,expected.vertices.length);
+  assert.equal(obj.split('\n').filter(line=>line.startsWith('f ')).length,expected.faces.length);
+  const exported=await ui.savedJSON();
+  assert.equal(exported.scene.objects[0].vertices.length,8);
+  assert.equal(exported.scene.objects[0].modifiers.length,2);
+  ui.events.get('pagehide')();
+  const restored=harness(JSON.parse(ui.storage.get('polymoduler.autosave.v1')));
+  assert.equal(restored.api.getEvaluatedMesh(1).vertices.length,expected.vertices.length);
+  const imported=harness();
+  imported.importJSON(exported);
+  assert.equal(imported.api.getEvaluatedMesh(1).faces.length,expected.faces.length);
+});
+test('Modifier stack import validation rejects unsupported types and oversized geometry',async()=>{
+  const ui=harness(),data=await ui.savedJSON();
+  data.scene.objects[0].modifiers=[{type:'unknown'}];
+  ui.importJSON(data);
+  assert.match(ui.alerts.at(-1),/Could not open scene/);
+  assert.equal(ui.api.getScene().objects[0].modifiers.length,0);
+  const bad=await ui.savedJSON();
+  bad.scene.objects[0].modifiers=[
+    {type:'array',count:8,offset:[1,0,0]},
+    {type:'array',count:8,offset:[0,1,0]},
+    {type:'array',count:8,offset:[0,0,1]},
+    {type:'subdivide',levels:2}
+  ];
+  ui.importJSON(bad);
+  assert.match(ui.alerts.at(-1),/12,000/);
+  assert.equal(ui.api.getScene().objects[0].modifiers.length,0);
+});
+test('Modifier workspace button toggles and Apply all changes the same selected object',()=>{
+  const ui=harness();
+  ui.tab('modifiers').click();
+  ui.node('modifierType').value='array';
+  ui.node('modifierAdd').click();
+  assert.equal(ui.api.getScene().objects[0].vertices.length,8);
+  ui.node('modifierApplyAll').click();
+  assert.equal(ui.api.getScene().objects[0].vertices.length,24);
+  assert.equal(ui.api.getModifiers().modifiers.length,0);
+  assert.match(ui.node('modifierStatus').textContent,/applied/i);
+});
+
+test('PNG export includes modifiers even when a mesh edit mode was active',async()=>{
+  const ui=harness();
+  ui.api.addModifier('array');
+  ui.api.setRenderSettings({includeOutline:true});
+  ui.node('modeFace').click();
+  const before=ui.fills.length;
+  await ui.api.renderStill();
+  const atCapture=ui.captures.at(-1).fillCount;
+  assert.ok(atCapture-before>=19,'PNG should render the 18 generated faces plus background');
+  assert.match(ui.node('stats').textContent,/F: 6/,'restored viewport remains in face-edit mode');
+});
+test('Changing Mirror plane offset affects evaluated mesh and is undoable',()=>{
+  const ui=harness();
+  ui.api.addModifier('mirror');
+  ui.api.updateModifier(0,{center:1.5});
+  const geometry=ui.api.getEvaluatedMesh(1);
+  assert.equal(geometry.vertices[8][0],4);
+  assert.equal(geometry.vertices[9][0],2);
+  ui.node('undoBtn').click();
+  assert.equal(ui.api.getModifiers().modifiers[0].center,0);
+});
+
+test('Mirror controls respond to user changes and the Remove button clears the stack',()=>{
+  const ui=harness();
+  ui.tab('modifiers').click();
+  ui.node('modifierType').value='mirror';
+  ui.node('modifierAdd').click();
+  const children=node=>[node,...(node.children||[]).flatMap(children)];
+  let card=ui.node('modifierStack').children.at(-1);
+  const input=children(card).find(el=>el.type==='number');
+  assert.ok(input,'mirror offset field must be created');
+  input.value='1.5';
+  input.listeners.change();
+  assert.equal(ui.api.getModifiers().modifiers[0].center,1.5);
+  card=ui.node('modifierStack').children.at(-1);
+  const checkbox=children(card).find(el=>el.type==='checkbox');
+  assert.ok(checkbox,'mirror enable checkbox must exist');
+  checkbox.checked=false;
+  checkbox.listeners.change();
+  assert.equal(ui.api.getEvaluatedMesh(1).vertices.length,8);
+  card=ui.node('modifierStack').children.at(-1);
+  const remove=children(card).find(el=>el.textContent==='Remove');
+  assert.ok(remove,'remove button must exist');
+  remove.click();
+  assert.equal(ui.api.getModifiers().modifiers.length,0);
 });
